@@ -1,12 +1,15 @@
-import React, { memo, useMemo } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+import AllianceActions from '../redux/AllianceRedux'
 import { colors } from '../configs'
 import { WORDS } from '../constants'
 import { WithContext } from '../context/CustomContext'
 import globalStyles from '../styles'
 
 const AllianceListComponent = ({navigation,modalVisible,setModalVisible}) => {
+    const dispatch = useDispatch()
     const allianceState = useSelector(state => state.alliance)
     const persistState = useSelector(state => state.persist)
     const alliances = useMemo(() => {
@@ -16,9 +19,32 @@ const AllianceListComponent = ({navigation,modalVisible,setModalVisible}) => {
         return myAlliance
     }, [allianceState, persistState])
 
+    const acceptHandle = useCallback(
+        (item) => {
+            const data = {
+                ...persistState.authUser,
+                alliance: item.name,
+                status: 'active'
+            }
+            dispatch(AllianceActions.acceptRequest(data))
+        },
+        [persistState],
+    )
+
+    const declineHandle = useCallback(
+        (item) => {
+            const data = {
+                ...persistState.authUser,
+                alliance: item.name,
+            }
+            dispatch(AllianceActions.declineRequest(data))
+        },
+        [persistState],
+    )
 
     const groupItem = ({item, index}) => {
-        const troops = allianceState.troops.filter(itemT => itemT.alliance === item.name).length
+        const troopsNumber = allianceState.troops.filter(itemT => itemT.alliance === item.name && itemT.status === 'active').length
+        const troops = allianceState.troops.filter(itemT => itemT.alliance === item.name && itemT.email === persistState.authUser.email)
 
         return (
             <TouchableOpacity
@@ -31,8 +57,26 @@ const AllianceListComponent = ({navigation,modalVisible,setModalVisible}) => {
                 </View>
                 <View style={styles.infoWrap}>
                     <Text numberOfLines={1} style={[globalStyles.normalText, styles.nameAlliance]}>{item.name}</Text>
-                    <Text numberOfLines={1} style={globalStyles.descText}>{WORDS.TROOPERS}: {troops}</Text>
+                    <Text numberOfLines={1} style={globalStyles.descText}>{WORDS.TROOPERS}: {troopsNumber}</Text>
                 </View>
+                {troops[0].status === 'requested' && (
+                    <View style={styles.wrapOpt}>
+                        <TouchableOpacity 
+                            activeOpacity={0.5}
+                            style={styles.acceptBtn}
+                            onPress={() => acceptHandle(item)}
+                        >
+                            <Text style={globalStyles.descText}>{WORDS.ACCEPT}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                            activeOpacity={0.5}
+                            style={styles.declinetBtn}
+                            onPress={() => declineHandle(item)}
+                        >
+                            <Text style={globalStyles.descText}>{WORDS.DECLINE}</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </TouchableOpacity>
         )
     }
@@ -138,5 +182,27 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         marginBottom: 16
+    },
+    wrapOpt: {
+        paddingLeft: 8,
+        alignItems: 'center'
+    },
+    acceptBtn: {
+        width: 70,
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 20,
+        backgroundColor: colors.darkSuccess,
+        marginVertical: 4
+    },
+    declinetBtn: {
+        width:70,
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 20,
+        backgroundColor: colors.textSecondary,
+        marginVertical: 4
     }
 })

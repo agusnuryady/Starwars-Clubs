@@ -5,7 +5,16 @@ import { createReducer, createActions } from 'reduxsauce';
 const { Types, Creators } = createActions({
     createAllianceRequest: ['data','callback'],
     createAllianceSuccess: ['dataAlliances', 'dataTroops'],
-    createAllianceFailure: ['err']
+    createAllianceFailure: ['err'],
+    recruitRequest: ['data'],
+    recruitSuccess: ['data'],
+    recruitFailure: ['err'],
+    acceptRequest: ['data'],
+    acceptSuccess: ['data'],
+    acceptFailure: ['err'],
+    declineRequest: ['data'],
+    declineSuccess: ['data'],
+    declineFailure: ['err']
 })
 
 export const AllianceTypes = Types
@@ -52,10 +61,29 @@ export const successAlliance = (state, { dataAlliances, dataTroops }) => {
     }
 }
 
+export const successRecruit = (state, { data }) => {
+    return {
+        ...state,
+        fetchingAlliance: false,
+        successAlliance: true,
+        errAlliance: null,
+        troops: data
+    }
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
     [Types.CREATE_ALLIANCE_REQUEST]: requestAlliance,
     [Types.CREATE_ALLIANCE_SUCCESS]: successAlliance,
-    [Types.CREATE_ALLIANCE_FAILURE]: failureAlliance
+    [Types.CREATE_ALLIANCE_FAILURE]: failureAlliance,
+    [Types.RECRUIT_REQUEST]: requestAlliance,
+    [Types.RECRUIT_SUCCESS]: successRecruit,
+    [Types.RECRUIT_FAILURE]: failureAlliance,
+    [Types.ACCEPT_REQUEST]: requestAlliance,
+    [Types.ACCEPT_SUCCESS]: successRecruit,
+    [Types.ACCEPT_FAILURE]: failureAlliance,
+    [Types.DECLINE_REQUEST]: requestAlliance,
+    [Types.DECLINE_SUCCESS]: successRecruit,
+    [Types.DECLINE_FAILURE]: failureAlliance
 })

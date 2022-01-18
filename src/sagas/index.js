@@ -2,20 +2,24 @@ import { all, fork } from 'redux-saga/effects';
 import api from '../services/Api'
 
 /* ------------- Sagas ------------- */
-import { fetchLogin, fetchLogout, fetchRegister } from './PersistSaga'
-import { fetchCreate } from './AllianceSaga';
+import { fetchLocation, fetchLogin, fetchLogout, fetchRegister } from './PersistSaga'
+import { fetchAccept, fetchCreate, fetchDecline, fetchRecruit } from './AllianceSaga';
 
 function * PersistSagas () {
     yield all([
         fork(fetchRegister, api),
         fork(fetchLogin),
-        fork(fetchLogout)
+        fork(fetchLogout),
+        fork(fetchLocation)
     ])
 }
 
 function * AllianceSagas () {
     yield all([
-        fork(fetchCreate, api)
+        fork(fetchCreate, api),
+        fork(fetchRecruit),
+        fork(fetchAccept),
+        fork(fetchDecline)
     ])
 }
 

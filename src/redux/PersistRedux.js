@@ -12,6 +12,9 @@ const { Types, Creators } = createActions({
     logoutRequest: ['callbak'],
     logoutSuccess: ['data'],
     logoutFailure: ['err'],
+    locationRequest: ['data'],
+    locationSuccess: ['data'],
+    locationFailure: ['err'],
 })
 
 export const PersistTypes = Types
@@ -109,5 +112,8 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.LOGIN_FAILURE]: failureAuth,
     [Types.LOGOUT_REQUEST]: requestAuth,
     [Types.LOGOUT_SUCCESS]: successLogout,
-    [Types.LOGOUT_FAILURE]: failureAuth
+    [Types.LOGOUT_FAILURE]: failureAuth,
+    [Types.LOCATION_REQUEST]: requestUser,
+    [Types.LOCATION_SUCCESS]: successUser,
+    [Types.LOCATION_FAILURE]: failureUser
 })

@@ -77,3 +77,18 @@ export function * fetchLogoutAPI () {
         yield put(PersistActions.logoutFailure(error))
     }
 }
+
+export function * fetchLocation () {
+    yield takeLeading(PersistTypes.LOCATION_REQUEST, fetchLocationAPI)
+}
+
+export function * fetchLocationAPI ({ data }) {
+    try {
+        const { users } = yield select(state => state.persist)
+        const filter = users.filter(item => item.email !== data.email)
+        const datas = [...filter, data]
+        yield put(PersistActions.locationSuccess(datas))
+    } catch (error) {
+        yield put(PersistActions.locationFailure(error))
+    }
+}

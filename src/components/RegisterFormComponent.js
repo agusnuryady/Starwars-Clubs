@@ -1,7 +1,8 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Image, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { launchCamera } from 'react-native-image-picker'
 import { useDispatch, useSelector } from 'react-redux'
+import Geolocation  from '@react-native-community/geolocation'
 
 import { colors } from '../configs'
 import { WORDS } from '../constants'
@@ -12,10 +13,15 @@ import PersistActions from '../redux/PersistRedux'
 const RegisterFormComponent = () => {
     const dispatch = useDispatch()
     const persistState = useSelector(state => state.persist)
+    const [location, setLocation] = useState(null)
     const [photoUri, setPhotoUri] = useState('')
     const [email, setEmail] = useState('')
     const [fullname, setFullname] = useState('')
     const [password, setPassword] = useState('')
+
+    useEffect(() => {
+        Geolocation.getCurrentPosition(info => setLocation(info.coords))
+    }, [])
 
     const takeProfilepic = async () => {
         const result = await launchCamera({mediaType: 'photo', cameraType: 'front'})
@@ -40,7 +46,9 @@ const RegisterFormComponent = () => {
                 email,
                 fullname,
                 password,
-                profile_pic: photoUri
+                profile_pic: photoUri,
+                lat: location.latitude,
+                long: location.longitude
             }
             dispatch(PersistActions.registerRequest(data))
         }

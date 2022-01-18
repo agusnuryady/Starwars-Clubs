@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { colors } from '../configs'
+import { WORDS } from '../constants'
 import { WithContext } from '../context/CustomContext'
 import globalStyles from '../styles'
 
@@ -19,43 +20,43 @@ const ShipDetailComponent = ({ item }) => {
                 pagingEnabled
             >
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Starship Name:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.STARSHIP_NAME}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.name}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Model:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.MODEL}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.model}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Starship Class:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.STARSHIP_CLASS}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.starship_class}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Manufacturer:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.MANUFACTURER}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.manufacturer}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Length:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.LENGTH}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.length} m</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Cargo Capacity:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.CARGO_CAPACITY}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.cargo_capacity} kg</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Crew:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.CREW}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.crew}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Passengers:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.PASSANGERS}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.passengers}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Consumables:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.CONSUMABLES}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.consumables}</Text>
                 </View>
                 <View style={styles.itemWrap}>
-                    <Text style={globalStyles.descText}>Cost In Credits:</Text>
+                    <Text style={globalStyles.descText}>{WORDS.COST_IN_CREDITS}:</Text>
                     <Text numberOfLines={2} style={[globalStyles.normalText, {textAlign: 'center'}]}>{item.properties.cost_in_credits}</Text>
                 </View>
             </ScrollView>

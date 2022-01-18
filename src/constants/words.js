@@ -25,7 +25,27 @@ const words = {
     WRONG_PASSWORD: 'Wrong password!',
     EMAIL_NOT_FOUND: 'Email user not found',
     ALLIANCE_NAME_USED: 'Alliance name has been used!',
-    TROOPERS: 'Troopers'
+    TROOPERS: 'Troopers',
+    STARSHIP_NAME: 'Starship Name',
+    MODEL: 'Model',
+    STARSHIP_CLASS: 'Starship Class',
+    MANUFACTURER: 'Manufacturer',
+    LENGTH: 'Length',
+    CARGO_CAPACITY: 'Cargo Capacity',
+    CREW: 'Crew',
+    PASSANGERS: 'Passengers',
+    CONSUMABLES: 'Consumables',
+    COST_IN_CREDITS: 'Cost In Credits',
+    YOU: 'You',
+    FLEET_TROOP: 'Fleet Troop',
+    NAME: 'Name',
+    POSITION: 'Position',
+    RECRUIT_TROOPS: 'Recruit Troops',
+    GENDER: 'Gender',
+    REQUESTED: 'Requested',
+    RECRUIT: 'Recruit',
+    ACCEPT: 'Accept',
+    DECLINE: 'Decline'
 }
 
 export default words

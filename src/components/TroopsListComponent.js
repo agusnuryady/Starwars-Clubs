@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Image, Linking, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import { colors } from '../configs'
 import { WORDS } from '../constants'
@@ -11,25 +11,40 @@ const TroopsListComponent = ({navigation, item}) => {
     const persistState = useSelector(state => state.persist)
 
     const troops = useMemo(() => {
-        return allianceState.troops.filter(itemT => itemT.alliance === item.name)
+        return allianceState.troops.filter(itemT => itemT.alliance === item.name && itemT.status !== 'requested')
     }, [allianceState])
+
+    const openMap = (item) => {
+        const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+        const latLng = `${item.lat},${item.long}`;
+        const label = 'Custom Label';
+        const url = Platform.select({
+            ios: `${scheme}${label}@${latLng}`,
+            android: `${scheme}${latLng}(${label})`
+        });
+
+        Linking.openURL(url);
+    }
 
     const troopsItem = ({item, index}) => {
         return (
             <TouchableOpacity
                 activeOpacity={0.5}
+                disabled={item.fullname === persistState.authUser.fullname}
                 style={styles.troopsItem}
-                onPress={() => navigation.navigate('Profile')}
+                onPress={() => navigation.navigate('Profile', { item })}
             >
                 <View style={styles.itemRight}>
                     <Image source={require('../assets/images/troop_ship.png')} style={styles.shipImage} />
-                    <Text style={globalStyles.normalText}>{item.fullname === persistState.authUser.fullname ? 'You' : item.fullname}</Text>
+                    <Text style={globalStyles.normalText}>{item.fullname === persistState.authUser.fullname ? WORDS.YOU : item.fullname}</Text>
                 </View>
                 <Text 
                     style={[globalStyles.descText, styles.locationText]}
-                    onPress={() => {}}
+                    onPress={() => openMap(item)}
                 >
-                    {`-6.989839\n103.03423`}
+                    <Text>{item.lat.toFixed(6)}</Text>
+                    {`\n`}
+                    <Text>{item.long.toFixed(6)}</Text>
                 </Text>
             </TouchableOpacity>
         )
@@ -37,10 +52,10 @@ const TroopsListComponent = ({navigation, item}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={[globalStyles.subTitleText, {alignSelf: 'center'}]}>Fleet Troop</Text>
+            <Text style={[globalStyles.subTitleText, {alignSelf: 'center'}]}>{WORDS.FLEET_TROOP}</Text>
             <View style={styles.wrapTabTable}>
-                <Text style={globalStyles.normalText}>Name</Text>
-                <Text style={globalStyles.normalText}>Position</Text>
+                <Text style={globalStyles.normalText}>{WORDS.NAME}</Text>
+                <Text style={globalStyles.normalText}>{WORDS.POSITION}</Text>
             </View>
             <FlatList 
                 data={troops}
@@ -53,13 +68,15 @@ const TroopsListComponent = ({navigation, item}) => {
                     </View>
                 }
             />
-            <TouchableOpacity 
-                activeOpacity={0.5} 
-                style={styles.addWrap}
-                onPress={() => navigation.navigate('Troops')}
-            >
-                <Text style={[globalStyles.normalText, {color: colors.primary}]}>Recruit Troops</Text>
-            </TouchableOpacity>
+            {item.admin === persistState.authUser.email && (
+                <TouchableOpacity 
+                    activeOpacity={0.5} 
+                    style={styles.addWrap}
+                    onPress={() => navigation.navigate('Troops', { item })}
+                >
+                    <Text style={[globalStyles.normalText, {color: colors.primary}]}>{WORDS.RECRUIT_TROOPS}</Text>
+                </TouchableOpacity>
+            )}
         </View>
     )
 }

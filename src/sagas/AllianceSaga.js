@@ -19,8 +19,6 @@ export function * fetchCreateAPI (api, { data, callback }) {
             let alliance = {...startship.data.result, ...data}
             let troop = {
                 ...authUser,
-                long: '',
-                lat: '',
                 alliance: data.name,
                 status: 'active'
             }
@@ -39,5 +37,52 @@ export function * fetchCreateAPI (api, { data, callback }) {
         }
     } catch (error) {
         yield put(AllianceActions.createAllianceFailure(error))
+    }
+}
+
+export function * fetchRecruit () {
+    yield takeLeading(AllianceTypes.RECRUIT_REQUEST, fetchRecruitAPI)
+}
+
+export function * fetchRecruitAPI ({ data }) {
+    try {
+        const { troops } = yield select(state => state.alliance)
+        const troop = {
+            ...data,
+            status: 'requested'
+        }
+        const datas = [...troops, troop]
+        yield put(AllianceActions.recruitSuccess(datas))
+    } catch (error) {
+        yield put(AllianceActions.recruitFailure(error))
+    }
+}
+
+export function * fetchAccept () {
+    yield takeLeading(AllianceTypes.ACCEPT_REQUEST, fetchAcceptAPI)
+}
+
+export function * fetchAcceptAPI ({ data }) {
+    try {
+        const { troops } = yield select(state => state.alliance)
+        const filterTroop = troops.filter((item) => item.alliance === data.alliance && item.email !== data.email)
+        const datas = [...filterTroop, data]
+        yield put(AllianceActions.acceptSuccess(datas))
+    } catch (error) {
+        yield put(AllianceActions.acceptFailure(error))
+    }
+}
+
+export function * fetchDecline () {
+    yield takeLeading(AllianceTypes.DECLINE_REQUEST, fetchDeclineAPI)
+}
+
+export function * fetchDeclineAPI ({ data }) {
+    try {
+        const { troops } = yield select(state => state.alliance)
+        const filterTroop = troops.filter((item) => item.alliance === data.alliance && item.email !== data.email)
+        yield put(AllianceActions.declineSuccess(filterTroop))
+    } catch (error) {
+        yield put(AllianceActions.declineFailure(error))
     }
 }
